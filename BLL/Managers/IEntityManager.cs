@@ -12,5 +12,6 @@ namespace BLL.Managers
         public Task<IEnumerable<T>> GetAll();
         public Task<T?> Get(int id);
         public Task<IEnumerable<T>> GetByAuthor(string author);
+        public Task Add(T entity);
     }
 }

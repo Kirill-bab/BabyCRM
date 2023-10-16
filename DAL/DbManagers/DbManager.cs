@@ -30,16 +30,24 @@ namespace DAL.DbManagers
                 return await connection.QueryAsync<T>(procedureName, parameters,
                     commandType: CommandType.StoredProcedure);
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
-                _logger.LogWarning(ex,"There was an error with loading data from a database");
+                _logger.LogWarning("There was an error with loading data from a database");
+                throw;
             }
-
-            return new List<T>();
         }
 
         public async Task Insert(T entity)
         {
+            try
+            {
+                throw new Exception();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("There was an error with inserting data to a database");
+                throw ex;
+            }
         }
     }
 }

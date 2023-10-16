@@ -34,5 +34,10 @@ namespace BLL.Managers
         {
             throw new NotImplementedException();
         }
+
+        public async Task Add(Client client)
+        {
+            await _dbManager.Insert(client);
+        }
     }
 }
