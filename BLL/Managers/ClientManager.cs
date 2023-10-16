@@ -10,14 +10,14 @@ namespace BLL.Managers
 {
     public class ClientManager : IEntityManager<Client>
     {
-        private IDbManager<Client> _dbManager;
+        private readonly IDbManager<Client> _dbManager;
 
         public ClientManager(IDbManager<Client> dbManager)
         {
             _dbManager = dbManager;
         }
 
-        public string ProcedurePrefix => "[Client]";
+        public string ProcedurePrefix => "[Client].Client";
 
         public async Task<IEnumerable<Client>> GetAll()
         {
