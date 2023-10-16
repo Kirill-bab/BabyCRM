@@ -33,4 +33,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.RunWithExceptionsHandling(app.Logger);
