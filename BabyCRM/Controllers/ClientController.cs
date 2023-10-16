@@ -1,4 +1,5 @@
-﻿using DAL.DbManagers;
+﻿using BLL.Managers;
+using DAL.DbManagers;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,10 @@ namespace BabyCRM.Controllers
     [Route("[controller]")]
     public class ClientController : Controller
     {
-        private readonly ClientDbManager _clientManager;
-        public ClientController(DbManager<Client> clientManager)
+        private readonly IEntityManager<Client> _clientManager;
+        public ClientController(IEntityManager<Client> clientManager)
         {
-            _clientManager = (ClientDbManager)clientManager;
+            _clientManager = clientManager;
         }
 
         [HttpGet]

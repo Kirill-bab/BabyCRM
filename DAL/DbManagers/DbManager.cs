@@ -9,41 +9,24 @@ using Dapper;
 
 namespace DAL.DbManagers
 {
-    public abstract class DbManager<T> where T : IDbEntity
+    public class DbManager<T> : IDbManager<T> where T : IDbEntity
     {
-        private readonly string _tableName;
         private readonly string _connectionString;
-        public abstract string ProcedurePrefix { get; }
 
-        public DbManager(string connectionString, string tableName)
+        public DbManager(string connectionString)
         {
-            (_connectionString, _tableName) = (connectionString, tableName);
+            _connectionString = connectionString;
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<IEnumerable<T>> LoadData <U>(string procedureName, U parameters)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_connectionString))
-            {
-                return await connection.QueryAsync<T>($"select * from {_tableName}");  // TODO: move all queries to db procedures
-            }
+            using IDbConnection connection = new System.Data.SqlClient.SqlConnection(_connectionString);
+            return await connection.QueryAsync<T>(procedureName, parameters,
+                commandType: CommandType.StoredProcedure); // TODO: create db procedures
         }
 
-        /*public IEnumerable<T> GetCreatedInInterval(DateTime from, DateTime to)
+        public async Task Insert(T entity)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_connectionString))
-            {
-                return connection.Query<T>($"select * from {_tableName} where CreatedDate in ({},{})");
-            }
-        }*/
-
-        public abstract void Insert(T entity);
-
-        public IEnumerable<T> GetCreatedBy(string author)
-        {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(_connectionString))
-            {
-                return connection.Query<T>($"select * from {_tableName} where CreatedBy = '{author}'");
-            }
         }
     }
 }
