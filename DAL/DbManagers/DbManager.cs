@@ -13,7 +13,7 @@ namespace DAL.DbManagers
     {
         private readonly string _tableName;
         private readonly string _connectionString;
-        public abstract string ProcedurePrefix { get; set; }
+        public abstract string ProcedurePrefix { get; }
 
         public DbManager(string connectionString, string tableName)
         {

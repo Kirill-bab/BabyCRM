@@ -15,6 +15,8 @@ namespace DAL.DbManagers
         }
 
 
+        public override string ProcedurePrefix  => "Client";
+
         public override void Insert(Client client)
         {
             throw new NotImplementedException();
