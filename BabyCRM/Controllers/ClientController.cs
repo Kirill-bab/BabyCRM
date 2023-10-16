@@ -20,5 +20,12 @@ namespace BabyCRM.Controllers
         {
             return await _clientManager.GetAll();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClient([FromBody] Client client)
+        { 
+            await _clientManager.Add(client);
+            return Ok();
+        }
     }
 }
