@@ -21,7 +21,7 @@ namespace BLL.Managers
 
         public async Task<IEnumerable<Client>> GetAll()
         {
-            return await _dbManager.LoadData<dynamic>($"{ProcedurePrefix}_GetAll", new { });
+            return await _dbManager.LoadData($"{ProcedurePrefix}_GetAll", new { });
         }
 
         public async Task<Client?> Get(int id)

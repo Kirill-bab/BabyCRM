@@ -16,9 +16,9 @@ namespace DAL.DbManagers
         private readonly string _connectionString;
         private readonly ILogger _logger;
 
-        public DbManager(string connectionString, ILoggerFactory loggerFactory)
+        public DbManager(ILoggerFactory loggerFactory)
         {
-            _connectionString = connectionString;
+            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MainDb"].ConnectionString;
             _logger = loggerFactory.CreateLogger<DbManager<T>>();
         }
 
