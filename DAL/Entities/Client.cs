@@ -16,9 +16,9 @@ namespace DAL.Entities
         public string PhoneNumber { get; set; }
         public string? EmailAddress { get; set; }
         public string? SocialNetworks { get; set; }
-        public int FilialId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public int DataVersion { get; set; }
+        public int FilialId { get; set; }
     }
 }
