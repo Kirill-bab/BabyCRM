@@ -8,36 +8,31 @@ using DAL.Entities;
 
 namespace BLL.Managers
 {
-    public class ClientManager : IEntityManager<Client>
+    public class ClientManager : EntityManager<Client>
     {
-        private readonly IDbManager<Client> _dbManager;
-
-        public ClientManager(IDbManager<Client> dbManager)
+        public ClientManager(IDbManager<Client> dbManager) : base(dbManager)
         {
-            _dbManager = dbManager;
         }
 
-        public string ProcedurePrefix => "[Client].Client";
+        public override string ProcedurePrefix => "[Client].Client";
 
-        public async Task<IEnumerable<Client>> GetAll()
+        public override async Task Add(Client client)
         {
-            return await _dbManager.LoadData($"{ProcedurePrefix}_GetAll", new { });
-        }
-
-        public async Task<Client?> Get(int id)
-        {
-            var result = await _dbManager.LoadData<dynamic>($"{ProcedurePrefix}_Get", new { Id = id });
-            return result.FirstOrDefault();
-        }
-
-        public Task<IEnumerable<Client>> GetByAuthor(string author)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task Add(Client client)
-        {
-            await _dbManager.Insert(client);
+            await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Insert",
+                new
+                {
+                    client.FirstName,
+                    client.LastName,
+                    client.Birthday,
+                    client.ParentFullName,
+                    client.PhoneNumber,
+                    client.EmailAddress,
+                    client.SocialNetworks,
+                    CreatedDate = DateTime.Now,
+                    client.CreatedBy,
+                    DataVersion = 0,
+                    client.FilialId
+                });
         }
     }
 }

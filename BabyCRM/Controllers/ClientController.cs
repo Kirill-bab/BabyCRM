@@ -1,5 +1,4 @@
 ﻿using BLL.Managers;
-using DAL.DbManagers;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,22 +8,46 @@ namespace BabyCRM.Controllers
     [Route("[controller]")]
     public class ClientController : Controller
     {
-        private readonly IEntityManager<Client> _clientManager;
-        public ClientController(IEntityManager<Client> clientManager)
+        private readonly EntityManager<Client> _clientManager;
+        public ClientController(EntityManager<Client> clientManager)
         {
             _clientManager = clientManager;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Client>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _clientManager.GetAll();
+            var results = await _clientManager.GetAll();
+            if (results is null || !results.Any()) return NoContent();
+            return Ok(results);
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            var result = await _clientManager.Get(id);
+            return result is null ? NotFound() : Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddClient([FromBody] Client client)
         { 
             await _clientManager.Add(client);
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateClient([FromBody] Client client)
+        {
+            await _clientManager.Update(client);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteClient([FromRoute] int id)
+        {
+            await _clientManager.Delete(id);
             return Ok();
         }
     }

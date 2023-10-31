@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSingleton<IDbManager<Client>, DbManager<Client>>();
-builder.Services.AddSingleton<IEntityManager<Client>, ClientManager>();
+builder.Services.AddSingleton<EntityManager<Client>, ClientManager>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

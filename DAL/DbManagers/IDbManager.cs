@@ -9,6 +9,6 @@ namespace DAL.DbManagers
     public interface IDbManager<T> where T : IDbEntity
     {
         public Task<IEnumerable<T>> LoadData<U>(string procedureName, U parameters);
-        public Task Insert(T entity);
+        public Task ExecuteProcedure<U>(string procedureName, U parameters);
     }
 }

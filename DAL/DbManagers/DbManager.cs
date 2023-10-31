@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Entities;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace DAL.DbManagers
@@ -16,9 +17,11 @@ namespace DAL.DbManagers
         private readonly string _connectionString;
         private readonly ILogger _logger;
 
-        public DbManager(ILoggerFactory loggerFactory)
+        public DbManager(ILoggerFactory loggerFactory, IConfiguration config)
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MainDb"].ConnectionString;
+            //This code is for retrieving CN from app.config file
+            //_connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+            _connectionString = config.GetConnectionString("Default");
             _logger = loggerFactory.CreateLogger<DbManager<T>>();
         }
 
@@ -33,20 +36,22 @@ namespace DAL.DbManagers
             catch (SqlException)
             {
                 _logger.LogWarning("There was an error with loading data from a database");
-                throw;
             }
+
+            return new List<T>();
         }
 
-        public async Task Insert(T entity)
+        public async Task ExecuteProcedure<U>(string procedureName, U parameters)
         {
             try
             {
-                throw new Exception();
+                using IDbConnection connection = new SqlConnection(_connectionString);
+                await connection.ExecuteAsync(procedureName, parameters,
+                    commandType: CommandType.StoredProcedure);
             }
-            catch (Exception ex)
+            catch (SqlException)
             {
-                _logger.LogWarning("There was an error with inserting data to a database");
-                throw ex;
+                _logger.LogWarning($"There was an error executing procedure {procedureName} on a database");
             }
         }
     }
