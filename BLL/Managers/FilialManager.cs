@@ -31,8 +31,9 @@ namespace BLL.Managers
                 var groupedFilial = g.First();
                 groupedFilial.Clients = g.Select(f => f.Clients.Single()).ToList();
                 return groupedFilial;
-            }).ToList();
-           return result;
+            }).ToList();                                    //adding ToList() call prevents second call to inner Select() statement. Otherwise, run fails on call to Single() function, because sequence contains more than one element. My guess is that IEnumerable interface only creates a sequence of actions that need to be done to collection rather than returning an actual result. 
+                                                            // TODO: ask teacher a question about why this is happening... Bloody dark .net magic
+            return result;                                  //Answer: Select() does not call provided delegate. It only construct deferred executed IEnumerable object. And delegate will be called each time you enumerate resulted IEnumerable object.
         }
 
         public override async Task<Filial?> Get(int id)

@@ -6,7 +6,7 @@ namespace BabyCRM.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ClientController : Controller
+    public class ClientController : Controller                  // TODO: rework to minimal API with Carter, add migrations
     {
         private readonly EntityManager<Client> _clientManager;
         public ClientController(EntityManager<Client> clientManager)
