@@ -33,9 +33,28 @@ namespace DAL.DbManagers
                 return await connection.QueryAsync<T>(procedureName, parameters,
                     commandType: CommandType.StoredProcedure);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                _logger.LogWarning("There was an error with loading data from a database");
+                _logger.LogWarning("There was an error with loading data from a database: " + ex.Message);
+            }
+
+            return new List<T>();
+        }
+
+        public async Task<IEnumerable<T>> LoadData<TFirst, TSecond, U>
+            (string sql,
+                Func<TFirst, TSecond, T> map,
+                U parameters,
+                string splitOn = "Id")
+        {
+            try
+            {
+                using IDbConnection connection = new SqlConnection(_connectionString);
+                return await connection.QueryAsync<TFirst ,TSecond, T>(sql, map, parameters, splitOn: splitOn);
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogWarning("There was an error with loading data from a database: " + ex.Message);
             }
 
             return new List<T>();
@@ -49,9 +68,9 @@ namespace DAL.DbManagers
                 await connection.ExecuteAsync(procedureName, parameters,
                     commandType: CommandType.StoredProcedure);
             }
-            catch (SqlException)
+            catch (SqlException ex)
             {
-                _logger.LogWarning($"There was an error executing procedure {procedureName} on a database");
+                _logger.LogWarning($"There was an error executing procedure {procedureName} on a database: " + ex.Message);
             }
         }
     }

@@ -27,7 +27,7 @@ namespace BLL.Managers
 
         public virtual async Task<T?> Get(int id)
         {
-            var result = await _dbManager.LoadData<dynamic>($"{ProcedurePrefix}_Get", new { Id = id });
+            var result = await _dbManager.LoadData($"{ProcedurePrefix}_Get", new { Id = id });
             return result.FirstOrDefault();
         }
 
