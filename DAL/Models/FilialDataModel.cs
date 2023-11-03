@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
-    public class Filial : IDbEntity
+    public class FilialDataModel : IDbEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -15,6 +15,6 @@ namespace DAL.Entities
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public int DataVersion { get; set; }
-        public List<Client>? Clients { get; set; }
+        public List<ClientDataModel>? Clients { get; set; }
     }
 }

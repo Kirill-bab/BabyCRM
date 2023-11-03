@@ -1,4 +1,5 @@
-﻿using BLL.Managers;
+﻿using BLL.Commands.Clients;
+using BLL.Managers;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,8 +9,8 @@ namespace BabyCRM.Controllers
     [Route("[controller]")]
     public class ClientController : Controller                  // TODO: rework to minimal API with Carter, add migrations
     {
-        private readonly EntityManager<Client> _clientManager;
-        public ClientController(EntityManager<Client> clientManager)
+        private readonly EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand> _clientManager;
+        public ClientController(EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand> clientManager)
         {
             _clientManager = clientManager;
         }
@@ -31,20 +32,22 @@ namespace BabyCRM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddClient([FromBody] Client client)
-        { 
-            await _clientManager.Add(client);
+        public async Task<IActionResult> AddClient([FromBody] CreateClientCommand command)
+        {
+            command.CreatedBy = User.Identity.Name ?? "Admin-Default";
+            await _clientManager.Add(command);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateClient([FromBody] Client client)
+        public async Task<IActionResult> UpdateClient([FromBody] UpdateClientCommand command)
         {
-            await _clientManager.Update(client);
+            await _clientManager.Update(command);
             return Ok();
         }
 
         [HttpDelete]
+        [Route("{id:int}")]
         public async Task<IActionResult> DeleteClient([FromRoute] int id)
         {
             await _clientManager.Delete(id);

@@ -2,6 +2,7 @@ using System.Data;
 using System.Data.SqlClient;
 using BabyCRM;
 using BabyCRM.Extensions;
+using BLL.Commands.Clients;
 using BLL.Managers;
 using DAL;
 using DAL.DbManagers;
@@ -13,10 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddSingleton<IDbManager<Client>, DbManager<Client>>();
-builder.Services.AddSingleton<EntityManager<Client>, ClientManager>();
-builder.Services.AddSingleton<IDbManager<Filial>, DbManager<Filial>>();
-builder.Services.AddSingleton<EntityManager<Filial>, FilialManager>();
+builder.Services.AddSingleton<IDbManager<ClientDataModel>, DbManager<ClientDataModel>>();
+builder.Services.AddSingleton<EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand>, ClientManager>();
+//builder.Services.AddSingleton<IDbManager<FilialDataModel>, DbManager<FilialDataModel>>();
+//builder.Services.AddSingleton<EntityManager<FilialDataModel>, FilialManager>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

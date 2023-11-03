@@ -6,10 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL;
+using BLL.Commands;
 
 namespace BLL.Managers
 {
-    public abstract class EntityManager<T> where T : IDbEntity
+    public abstract class EntityManager<T, TCreateCommand, TUpdateCommand> 
+        where T : IDbEntity
+        where TCreateCommand : ICreateEntityCommand<T>
+        where TUpdateCommand : IUpdateEntityCommand<T>
     {
         protected readonly IDbManager<T> _dbManager;
 
@@ -36,11 +40,14 @@ namespace BLL.Managers
             return await _dbManager.LoadData($"{ProcedurePrefix}_GetByAuthor", new { Author = author });
         }
 
-        public abstract Task Add(T entity);
-
-        public virtual async Task Update(T entity)
+        public virtual async Task Add(TCreateCommand command)
         {
-            await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Update", entity);
+            await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Insert", command);
+        }
+
+        public virtual async Task Update(TUpdateCommand command)
+        {
+            await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Update", command);
         }
 
         public virtual async Task Delete(int id)

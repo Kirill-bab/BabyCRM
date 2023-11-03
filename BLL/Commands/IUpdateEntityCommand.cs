@@ -1,14 +1,13 @@
-﻿using DAL.DbManagers;
-using DAL.Entities;
+﻿using DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Managers
+namespace BLL.Commands
 {
-    public class FilialManager 
+    public interface IUpdateEntityCommand<T> where T : IDbEntity
     {
     }
 }

@@ -8,8 +8,8 @@ namespace BabyCRM.Controllers
     [Route("[controller]")]
     public class FilialController : Controller                  // TODO: rework to minimal API with Carter, add migrations
     {
-        private readonly EntityManager<Filial> _filialManager;
-        public FilialController(EntityManager<Filial> filialManager)
+       /* private readonly EntityManager<FilialDataModel> _filialManager;
+        public FilialController(EntityManager<FilialDataModel> filialManager)
         {
             _filialManager = filialManager;
         }
@@ -31,16 +31,16 @@ namespace BabyCRM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFilial([FromBody] Filial filial)
+        public async Task<IActionResult> AddFilial([FromBody] FilialDataModel filialDataModel)
         {
-            await _filialManager.Add(filial);
+            await _filialManager.Add(filialDataModel);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateFilial([FromBody] Filial filial)
+        public async Task<IActionResult> UpdateFilial([FromBody] FilialDataModel filialDataModel)
         {
-            await _filialManager.Update(filial);
+            await _filialManager.Update(filialDataModel);
             return Ok();
         }
 
@@ -49,6 +49,6 @@ namespace BabyCRM.Controllers
         {
             await _filialManager.Delete(id);
             return Ok();
-        }
+        }*/
     }
 }

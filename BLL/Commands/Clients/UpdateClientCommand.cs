@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Entities;
 
-namespace DAL.Entities
+namespace BLL.Commands.Clients
 {
-    public class Client : IDbEntity 
+    public class UpdateClientCommand : IUpdateEntityCommand<ClientDataModel>
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -16,9 +17,6 @@ namespace DAL.Entities
         public string PhoneNumber { get; set; }
         public string? EmailAddress { get; set; }
         public string? SocialNetworks { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public int DataVersion { get; set; }
         public int FilialId { get; set; }
     }
 }
