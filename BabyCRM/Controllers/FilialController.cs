@@ -1,4 +1,5 @@
-﻿using BLL.Managers;
+﻿using BLL.Commands.Filials;
+using BLL.Managers;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,8 +9,8 @@ namespace BabyCRM.Controllers
     [Route("[controller]")]
     public class FilialController : Controller                  // TODO: rework to minimal API with Carter, add migrations
     {
-       /* private readonly EntityManager<FilialDataModel> _filialManager;
-        public FilialController(EntityManager<FilialDataModel> filialManager)
+        private readonly EntityManager<FilialDataModel, CreateFilialCommand, UpdateFilialCommand> _filialManager;
+        public FilialController(EntityManager<FilialDataModel, CreateFilialCommand, UpdateFilialCommand> filialManager)
         {
             _filialManager = filialManager;
         }
@@ -31,24 +32,26 @@ namespace BabyCRM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFilial([FromBody] FilialDataModel filialDataModel)
+        public async Task<IActionResult> AddFilial([FromBody] CreateFilialCommand command)
         {
-            await _filialManager.Add(filialDataModel);
+            command.CreatedBy = User.Identity.Name ?? "Admin-Default";
+            await _filialManager.Add(command);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateFilial([FromBody] FilialDataModel filialDataModel)
+        public async Task<IActionResult> UpdateFilial([FromBody] UpdateFilialCommand command)
         {
-            await _filialManager.Update(filialDataModel);
+            await _filialManager.Update(command);
             return Ok();
         }
 
         [HttpDelete]
+        [Route("{id:int}")]
         public async Task<IActionResult> DeleteFilial([FromRoute] int id)
         {
             await _filialManager.Delete(id);
             return Ok();
-        }*/
+        }
     }
 }
