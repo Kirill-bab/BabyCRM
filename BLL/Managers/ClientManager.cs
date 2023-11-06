@@ -3,41 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Commands;
+using BLL.Commands.Clients;
 using DAL.DbManagers;
 using DAL.Entities;
+using Dapper;
 
 namespace BLL.Managers
 {
-    public class ClientManager : IEntityManager<Client>
+    public class ClientManager : EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand>
     {
-        private readonly IDbManager<Client> _dbManager;
-
-        public ClientManager(IDbManager<Client> dbManager)
+        public ClientManager(IDbManager<ClientDataModel> dbManager) : base(dbManager)
         {
-            _dbManager = dbManager;
         }
 
-        public string ProcedurePrefix => "[Client].Client";
-
-        public async Task<IEnumerable<Client>> GetAll()
-        {
-            return await _dbManager.LoadData<dynamic>($"{ProcedurePrefix}_GetAll", new { });
-        }
-
-        public async Task<Client?> Get(int id)
-        {
-            var result = await _dbManager.LoadData<dynamic>($"{ProcedurePrefix}_Get", new { Id = id });
-            return result.FirstOrDefault();
-        }
-
-        public Task<IEnumerable<Client>> GetByAuthor(string author)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task Add(Client client)
-        {
-            await _dbManager.Insert(client);
-        }
+        public override string ProcedurePrefix => "[Client].Client";
+        
     }
 }
