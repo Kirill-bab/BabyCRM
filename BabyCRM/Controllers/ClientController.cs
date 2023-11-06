@@ -1,6 +1,7 @@
 ﻿using BLL.Commands.Clients;
 using BLL.Managers;
 using DAL.Entities;
+using DAL.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BabyCRM.Controllers
@@ -10,9 +11,12 @@ namespace BabyCRM.Controllers
     public class ClientController : Controller                  // TODO: rework to minimal API with Carter, add migrations
     {
         private readonly EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand> _clientManager;
-        public ClientController(EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand> clientManager)
+        private readonly IConfiguration _configuration;
+        public ClientController(EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand> clientManager,
+            IConfiguration config)
         {
             _clientManager = clientManager;
+            _configuration = config;
         }
 
         [HttpGet]
@@ -29,6 +33,14 @@ namespace BabyCRM.Controllers
         {
             var result = await _clientManager.Get(id);
             return result is null ? NotFound() : Ok(result);
+        }
+
+        [HttpGet]
+        [Route("generate/{quantity:int}")]
+        public async Task<IActionResult> GenerateSamples([FromRoute] int quantity = 20)
+        {
+            await DataGenerator.GenerateClients(_configuration, quantity);
+            return Ok();
         }
 
         [HttpPost]

@@ -36,7 +36,7 @@ namespace DAL.Migrations
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
                 .WithColumn("CreatedBy").AsString(30).NotNullable()
                 .WithColumn("DataVersion").AsInt32().NotNullable()
-                .WithColumn("FilialId").AsInt32().NotNullable();
+                .WithColumn("FilialId").AsInt32().Nullable();
 
                 Create.ForeignKey("FK_Client_Filial_FilialId")
                 .FromTable("Client").InSchema("Client").ForeignColumn("FilialId")
