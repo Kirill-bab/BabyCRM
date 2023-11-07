@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper.Contrib.Extensions;
 
-namespace DAL.Entities
+namespace DAL.Models
 {
+    [Table("Filial.Filial")]
     public class FilialDataModel : IDbEntity
     {
         public int Id { get; set; }

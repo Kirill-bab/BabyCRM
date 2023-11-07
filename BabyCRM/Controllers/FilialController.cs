@@ -1,6 +1,6 @@
 ﻿using BLL.Commands.Filials;
 using BLL.Managers;
-using DAL.Entities;
+using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BabyCRM.Controllers

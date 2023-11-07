@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using BLL.Commands;
 using BLL.Commands.Clients;
 using DAL.DbManagers;
-using DAL.Entities;
+using DAL.Models;
+using DAL.Helpers;
+using DAL.Models;
 using Dapper;
 
 namespace BLL.Managers
@@ -18,6 +20,11 @@ namespace BLL.Managers
         }
 
         public override string ProcedurePrefix => "[Client].Client";
-        
+        public async Task GenerateClients(int quantity)
+        {
+            var clients = DataGenerator.GenerateClients(quantity);
+            await AddMany(clients);
+        }
+
     }
 }
