@@ -1,6 +1,6 @@
 ﻿using BLL.Commands.Clients;
 using BLL.Managers;
-using DAL.Entities;
+using DAL.Models;
 using DAL.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +39,7 @@ namespace BabyCRM.Controllers
         [Route("generate/{quantity:int}")]
         public async Task<IActionResult> GenerateSamples([FromRoute] int quantity = 20)
         {
-            await DataGenerator.GenerateClients(_configuration, quantity);
+            await (_clientManager as ClientManager).GenerateClients(quantity);
             return Ok();
         }
 

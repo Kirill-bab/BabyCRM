@@ -5,10 +5,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL.Entities;
+using DAL.Models;
+using DAL.Models;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Z.Dapper.Plus;
 
 namespace DAL.DbManagers
 {
@@ -71,6 +73,19 @@ namespace DAL.DbManagers
             catch (SqlException ex)
             {
                 _logger.LogWarning($"There was an error executing procedure {procedureName} on a database: " + ex.Message);
+            }
+        }
+
+        public async Task SaveMany(IEnumerable<T> entities)
+        {
+            try
+            {
+                using IDbConnection connection = new SqlConnection(_connectionString);
+                await connection.BulkActionAsync(c => c.BulkInsert(entities));
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogWarning($"There was an error with saving entities of type {typeof(T)} to a database: " + ex.Message);
             }
         }
     }

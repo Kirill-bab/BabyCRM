@@ -1,12 +1,13 @@
 ﻿using DAL.DbManagers;
-using DAL.Entities;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL;
 using BLL.Commands;
+using DAL;
+using DAL.Models;
 
 namespace BLL.Managers
 {
@@ -43,6 +44,11 @@ namespace BLL.Managers
         public virtual async Task Add(TCreateCommand command)
         {
             await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Insert", command);
+        }
+
+        public virtual async Task AddMany(IEnumerable<T> entities)
+        {
+            await _dbManager.SaveMany(entities);
         }
 
         public virtual async Task Update(TUpdateCommand command)

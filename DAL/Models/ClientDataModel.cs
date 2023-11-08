@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
 
-namespace DAL.Entities
+namespace DAL.Models
 {
+    [Table("Client.Client")]
     public class ClientDataModel : IDbEntity 
     {
         public int Id { get; set; }
@@ -20,6 +21,6 @@ namespace DAL.Entities
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public int DataVersion { get; set; }
-        public int FilialId { get; set; }
+        public int? FilialId { get; set; }
     }
 }

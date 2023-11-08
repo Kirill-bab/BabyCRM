@@ -1,5 +1,5 @@
 ﻿using DAL.DbManagers;
-using DAL.Entities;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
