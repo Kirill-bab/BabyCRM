@@ -5,26 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using BLL.Commands;
 using BLL.Commands.Clients;
-using DAL.DbManagers;
 using DAL.Models;
 using DAL.Helpers;
 using DAL.Models;
+using DAL.Repositories;
 using Dapper;
 
 namespace BLL.Managers
 {
     public class ClientManager : EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand>
     {
-        public ClientManager(IDbManager<ClientDataModel> dbManager) : base(dbManager)
+        public ClientManager(IRepository<ClientDataModel> repository) : base(repository)
         {
         }
-
-        public override string ProcedurePrefix => "[Client].Client";
         public async Task GenerateClients(int quantity)
         {
             var clients = DataGenerator.GenerateClients(quantity);
             await AddMany(clients);
         }
-
     }
 }

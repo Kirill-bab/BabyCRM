@@ -1,5 +1,4 @@
-﻿using DAL.DbManagers;
-using DAL.Models;
+﻿using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BLL.Commands;
 using DAL;
-using DAL.Models;
+using DAL.Repositories;
 
 namespace BLL.Managers
 {
@@ -16,49 +15,41 @@ namespace BLL.Managers
         where TCreateCommand : ICreateEntityCommand<T>
         where TUpdateCommand : IUpdateEntityCommand<T>
     {
-        protected readonly IDbManager<T> _dbManager;
+        protected readonly IRepository<T> Repository;
 
-        public EntityManager(IDbManager<T> dbManager)
+        public EntityManager(IRepository<T> repository)
         {
-            _dbManager = dbManager;
+            Repository = repository;
         }
-
-        public abstract string ProcedurePrefix { get; }
 
         public virtual async Task<IEnumerable<T>> GetAll()
         {
-            return await _dbManager.LoadData($"{ProcedurePrefix}_GetAll", new { });
+            return await Repository.Get();
         }
 
         public virtual async Task<T?> Get(int id)
         {
-            var result = await _dbManager.LoadData($"{ProcedurePrefix}_Get", new { Id = id });
-            return result.FirstOrDefault();
-        }
-
-        public virtual async Task<IEnumerable<T>> GetByAuthor(string author)
-        {
-            return await _dbManager.LoadData($"{ProcedurePrefix}_GetByAuthor", new { Author = author });
+            return await Repository.GetOne(id);
         }
 
         public virtual async Task Add(TCreateCommand command)
         {
-            await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Insert", command);
+            await Repository.Save(command);
         }
 
         public virtual async Task AddMany(IEnumerable<T> entities)
         {
-            await _dbManager.SaveMany(entities);
+            await Repository.SaveMany(entities);
         }
 
         public virtual async Task Update(TUpdateCommand command)
         {
-            await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Update", command);
+            await Repository.Update(command);
         }
 
         public virtual async Task Delete(int id)
         {
-            await _dbManager.ExecuteProcedure($"{ProcedurePrefix}_Delete", new { Id = id });
+            await Repository.Delete(id);
         }
     }
 }

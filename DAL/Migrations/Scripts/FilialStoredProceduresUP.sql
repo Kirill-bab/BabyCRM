@@ -3,6 +3,26 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+CREATE PROCEDURE [Filial].[Filial_GetAll]
+AS
+BEGIN
+	SELECT  f.Id, f.Name, f.PhoneNumber, f.Address, f.CreatedDate, f.CreatedBy, f.DataVersion, 
+	c.Id, c.FirstName, c.LastName, c.Birthday, c.ParentFullName, c.PhoneNumber, c.EmailAddress, c.SocialNetworks, c.CreatedDate, c.CreatedBy, c.DataVersion, c.FilialId
+    FROM [Filial].Filial f LEFT JOIN [Client].Client c on f.Id = c.FilialId
+END
+GO
+
+CREATE PROCEDURE [Filial].[Filial_Get]
+	@FilialId INT
+AS
+BEGIN
+	SELECT  f.Id, f.Name, f.PhoneNumber, f.Address, f.CreatedDate, f.CreatedBy, f.DataVersion, 
+	c.Id, c.FirstName, c.LastName, c.Birthday, c.ParentFullName, c.PhoneNumber, c.EmailAddress, c.SocialNetworks, c.CreatedDate, c.CreatedBy, c.DataVersion, c.FilialId
+    FROM [Filial].Filial f LEFT JOIN [Client].Client c on f.Id = c.FilialId
+    WHERE f.Id = @FilialId
+END
+GO
+
 CREATE PROCEDURE [Filial].[Filial_Insert]
 	@Name NVARCHAR(30),
 	@PhoneNumber NVARCHAR(15),
