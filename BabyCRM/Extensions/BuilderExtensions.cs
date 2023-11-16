@@ -1,13 +1,15 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using System.Reflection;
 using BLL.Commands.Clients;
 using BLL.Commands.Filials;
 using BLL.Managers;
-using DAL.DbManagers;
 using DAL.Models;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using DAL;
+using DAL.Repositories;
+using DAL.Services;
 using Dapper;
 using Microsoft.AspNetCore.Hosting.Server;
 
@@ -17,10 +19,21 @@ namespace BabyCRM.Extensions
     {
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<IDbManager<ClientDataModel>, DbManager<ClientDataModel>>();
+            //Add Repositories
+            builder.Services.AddSingleton<IRepository<ClientDataModel>, ClientRepository>();
+            builder.Services.AddSingleton<IRepository<FilialDataModel>, FilialRepository>();
+            //Add Managers
             builder.Services.AddSingleton<EntityManager<ClientDataModel, CreateClientCommand, UpdateClientCommand>, ClientManager>();
-            builder.Services.AddSingleton<IDbManager<FilialDataModel>, DbManager<FilialDataModel>>();
             builder.Services.AddSingleton<EntityManager<FilialDataModel, CreateFilialCommand, UpdateFilialCommand>, FilialManager>();
+
+            builder.Services.AddSingleton<ISqlConnectionFactory>(serviceProvider =>
+            {
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+                var connectionString = configuration.GetConnectionString("Default") ??
+                                       throw new ApplicationException("The connection string is null");
+
+                return new SqlConnectionFactory(connectionString);
+            });
             builder.AddMigrations();
             return builder;
         }
@@ -33,13 +46,19 @@ namespace BabyCRM.Extensions
                     .ScanIn(Assembly.GetAssembly(typeof(ClientDataModel))).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole()).BuildServiceProvider(false);
 
-            using var connection = new SqlConnection(builder.Configuration.GetConnectionString("Setup"));
-            var mainDbUpScript = File.ReadAllText(@"../DAL/Migrations/Scripts/MainDbUP.sql");
-            var testDbUpScript = File.ReadAllText(@"../DAL/Migrations/Scripts/TestDbUP.sql");
-            connection.Execute(mainDbUpScript);
-            connection.Execute(testDbUpScript);
-
             using var scope = serviceProvider.CreateScope();
+
+            using IDbConnection connection = new SqlConnection(builder.Configuration.GetConnectionString("Setup"));
+
+            var mainDbUpScript = File.ReadAllText(@"../DAL/Migrations/Scripts/MainDbUP.sql");
+            connection.Execute(mainDbUpScript);
+
+            if (builder.Environment.IsDevelopment())
+            {
+                var testDbUpScript = File.ReadAllText(@"../DAL/Migrations/Scripts/TestDbUP.sql");
+                connection.Execute(testDbUpScript);
+            }
+
             var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
             runner.MigrateUp();
         }

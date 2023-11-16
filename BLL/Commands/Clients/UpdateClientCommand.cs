@@ -17,6 +17,6 @@ namespace BLL.Commands.Clients
         public string PhoneNumber { get; set; }
         public string? EmailAddress { get; set; }
         public string? SocialNetworks { get; set; }
-        public int FilialId { get; set; }
+        public int? FilialId { get; set; }
     }
 }
